@@ -1,0 +1,28 @@
+
+
+# Configura la clave de API y la ciudad que deseas consultar
+API_KEY="97eb7232fb6a4aaaa50181928242106"
+CIUDAD="bahia blanca"
+
+ciudad_encode=$(echo $CIUDAD | sed 's/ /%20/g')
+
+# Construye la URL de la API
+URL="http://api.weatherapi.com/v1/current.json?key=$API_KEY&q=$ciudad_encode&lang=es" 
+
+# Realiza la solicitud a la API y guarda la respuesta en un archivo temporal
+response=$(curl -s $URL)
+
+# Verifica si hubo un error en la solicitud
+if echo $response | jq -e .error >/dev/null; then
+    echo "Error: $(echo $response | jq -r .error.message)"
+    exit 1
+fi
+
+# Extrae la información relevante del JSON usando jq
+# Por ejemplo, para obtener la temperatura actual y la descripción del clima
+temperatura=$(echo "$response" | jq -r '.current.temp_c')
+descripcion=$(echo "$response" | jq -r '.current.condition.text')
+
+# Imprime la información del clima
+echo "El clima actual en $CIUDAD es: $descripcion"
+echo "La temperatura actual es: $temperatura °C"
