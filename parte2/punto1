@@ -1,29 +1,30 @@
 #!/bin/bash
 
-# Configura la clave de API y la ciudad que deseas consultar
+#configuro la clave de la api
 api_key="d41215f0d47e4d738f204312242206"
 
-read -p "Ingrese nombre de ciudad: "ciudad
+#pido y asigno variable ciudad
+read -p "Ingrese nombre de ciudad: " ciudad
 
+#adapta la variable para que pueda ser correctamente procesada por la api
 ciudad_encode=$(echo $ciudad | sed 's/ /%20/g')
 
-# Construye la URL de la API
+#forma la url de la api
 URL="http://api.weatherapi.com/v1/current.json?key=$api_key&q=$ciudad_encode&lang=es" 
 
-# Realiza la solicitud a la API y guarda la respuesta en un archivo temporal
+#realiza la solicitud a la api y guarda la respuesta en un archivo temporal
 response=$(curl -s $URL)
 
-# Verifica si hubo un error en la solicitud
+#verifica si hubo un error en la solicitud y si hubo lo muestra
 if echo $response | jq -e .error >/dev/null; then
     echo "Error: $(echo $response | jq -r .error.message)"
     exit 1
 fi
 
-# Extrae la informaci처n relevante del JSON usando jq
-# Por ejemplo, para obtener la temperatura actual y la descripci처n del clima
+#extrae la informacion relevante del json usando jq
 temperatura=$(echo "$response" | jq -r '.current.temp_c')
 descripcion=$(echo "$response" | jq -r '.current.condition.text')
 
-# Imprime la informaci처n del clima
-echo "El clima actual en $CIUDAD es: $descripcion"
-echo "La temperatura actual es: $temperatura 째C"
+#muestra la informacion
+echo "El clima actual en $ciudad es: $descripcion"
+echo "La temperatura actual es: $temperatura 캜"
