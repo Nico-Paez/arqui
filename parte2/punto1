@@ -1,13 +1,14 @@
-
+#!/bin/bash
 
 # Configura la clave de API y la ciudad que deseas consultar
-API_KEY="97eb7232fb6a4aaaa50181928242106"
-CIUDAD="bahia blanca"
+api_key="d41215f0d47e4d738f204312242206"
 
-ciudad_encode=$(echo $CIUDAD | sed 's/ /%20/g')
+read -p "Ingrese nombre de ciudad: "ciudad
+
+ciudad_encode=$(echo $ciudad | sed 's/ /%20/g')
 
 # Construye la URL de la API
-URL="http://api.weatherapi.com/v1/current.json?key=$API_KEY&q=$ciudad_encode&lang=es" 
+URL="http://api.weatherapi.com/v1/current.json?key=$api_key&q=$ciudad_encode&lang=es" 
 
 # Realiza la solicitud a la API y guarda la respuesta en un archivo temporal
 response=$(curl -s $URL)
